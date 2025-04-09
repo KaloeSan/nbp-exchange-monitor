@@ -1,0 +1,19 @@
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+requests>=2.28.0
+SQLAlchemy>=2.0.0
+psycopg2-binary>=2.9.0  # PostgreSQL driver
+python-dotenv>=1.0.0
+apscheduler>=3.10.0
+pyyaml>=6.0.0
+lxml>=4.9.0 # For XML generation (alternative to ElementTree if preferred)
+passlib[bcrypt]>=1.7.4 # Authentication layer
+bcrypt==3.2.0 # Pin to a compatible version
+python-jose[cryptography]>=3.3.0 # JWT authentication layer
+email-validator>=2.0.0 # For basic email validation in schemas
+pydantic-settings>=2.0.0 # For settings management
+python-multipart>=0.0.9
+spyne>=2.13.16 # For SOAP support
+httpx>=0.24.0 # For async HTTP requests
+asyncio 
+zeep

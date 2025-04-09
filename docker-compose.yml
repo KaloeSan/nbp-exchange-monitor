@@ -1,0 +1,82 @@
+services:
+  # Backend API Service (FastAPI)
+  backend:
+    build:
+      context: ./backend # Path to the backend directory
+      dockerfile: Dockerfile
+    container_name: nbp_backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload # Use reload for development
+    volumes:
+      - ./backend/app:/app/app # Mount the app code for live reload during development
+    ports:
+      - "8000:8000" # FastAPI
+      - "8001:8001" # SOAP
+    env_file:
+      - .env # Load environment variables from .env file
+    depends_on:
+      db:
+        condition: service_healthy # Wait for DB to be healthy before starting backend
+    networks:
+      - nbp_network
+    restart: unless-stopped
+    environment:
+      - CORS_ORIGINS=http://localhost:3000,http://frontend:80
+      - SOAP_SERVICE_HOST=0.0.0.0
+      - SOAP_SERVICE_PORT=8001
+      
+  # Frontend Service (React served by Nginx)
+  frontend:
+    build:
+      context: ./frontend # Path to the frontend directory
+      dockerfile: Dockerfile
+    container_name: nbp_frontend
+    ports:
+      - "3000:80" # Map host port 3000 to Nginx container port 80
+      # If using React Dev Server directly (npm start in Dockerfile CMD):
+      # - "3000:3000"
+    env_file:
+      - .env # Make env vars available at build time if needed by React build process
+    # For development with live reload (mount source code - requires node dev server)
+    # volumes:
+    #   - ./frontend/src:/app/src
+    #   - ./frontend/public:/app/public
+    # command: npm start # Override CMD in Dockerfile for development server
+    depends_on:
+      - backend # Optional: Frontend might start before backend is ready, handle API errors in React
+    networks:
+      - nbp_network
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_SOAP_URL=http://backend:8001/soap
+    restart: unless-stopped
+
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:15-alpine # Use official PostgreSQL image
+    container_name: nbp_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist database data
+    env_file:
+      - .env # Load POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432 (optional, for external access/debugging)
+    networks:
+      - nbp_network
+    healthcheck:
+      # Check if PostgreSQL is ready to accept connections
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-nbp_data}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s # Give container time to start before first check
+    restart: unless-stopped
+
+# Volumes definition (for data persistence)
+volumes:
+  postgres_data:
+    driver: local # Use local driver, data stored on the host machine Docker manages
+
+# Networks definition (allows containers to communicate)
+networks:
+  nbp_network:
+    driver: bridge # Default Docker network driver

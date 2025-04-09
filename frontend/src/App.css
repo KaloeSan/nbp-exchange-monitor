@@ -1,0 +1,785 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f7f6;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.App-header {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.logout-button {
+  padding: 8px 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+/* --- Controls Section --- */
+/* Style matching Dash: style={'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center', 'padding': '20px'} */
+.controls-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  gap: 15px; /* Spacing between control elements */
+  padding: 20px; /* Padding from Dash */
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.control-item {
+  display: flex;
+  flex-direction: column; /* Labels above inputs */
+  align-items: flex-start;
+  margin: 15px auto;
+  max-width: 300px;
+}
+
+.control-item label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: #34495e;
+}
+
+/* Style for selects, inputs */
+.control-item select,
+.control-item input[type="text"],
+.control-item input[type="number"],
+.control-item input[type="email"],
+.control-item .react-datepicker-wrapper input {
+    padding: 8px; /* Padding from Dash Input */
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 1em;
+    margin: 5px 0; /* Margin from Dash Input */
+}
+
+/* Specific width for currency selector */
+#currency-select {
+    width: 250px; /* Width from Dash Dropdown */
+    min-height: 80px; /* Adjust height for multi-select */
+}
+
+/* Style for RadioItems simulation (using simple select for now) */
+#data-type-select {
+    min-width: 150px;
+}
+
+/* Style for Date Pickers */
+.react-datepicker-wrapper input {
+    width: 100%; /* Make date picker input take full width of its container */
+    box-sizing: border-box;
+}
+.react-datepicker__input-container {
+     width: auto;
+     min-width: 180px; /* Ensure decent width */
+}
+
+/* Style for the main "Show Chart" button */
+.submit-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: white;
+    background-color: #3498db; /* Blue from Dash Button */
+    height: 40px; /* Height from Dash Button */
+    align-self: center; /* Align button vertically with other controls */
+    margin-top: 28px; /* Adjust margin to align with inputs having labels */
+}
+.submit-button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+.submit-button:hover:not(:disabled) {
+    background-color: #2980b9;
+}
+
+
+/* --- Chart Section --- */
+/* Style matching Dash: style={'height': '600px'} */
+.chart-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fdfefe; /* Lighter background for chart area */
+    border: 1px solid #ecf0f1;
+    border-radius: 5px;
+    min-height: 400px; /* Ensure space even when loading/error */
+    height: 600px; /* Height from Dash dcc.Graph */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Needed for Chart.js responsiveness */
+}
+
+.chart-placeholder {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+/* --- Notification Section --- */
+.notification-section {
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+}
+
+.notification-section h2 {
+    text-align: center;
+    color: #1f2937;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+/* Use flex similar to controls for alignment */
+.notification-form {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+
+.notification-form .control-item {
+    flex: 1;
+    min-width: 150px;
+    max-width: 200px;
+    margin: 0;
+}
+
+.notification-form input,
+.notification-form select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 38px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.notification-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.notification-form button {
+    height: 38px;
+    padding: 0 24px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    margin: 0;
+    align-self: flex-end; 
+}
+
+.notification-form button:hover:not(:disabled) {
+    background-color: #2ecc71;
+}
+
+.notification-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Width for threshold direction dropdown */
+#notif-direction {
+     width: 150px; /* Width from Dash Dropdown */
+}
+
+/* Style for "Set Alert" button */
+.set-alert-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: white;
+    background-color: #27ae60; /* Green from Dash Button */
+    height: 40px; /* Height from Dash Button */
+    align-self: center; /* Align with other inputs */
+     margin-top: 28px; /* Adjust margin to align */
+}
+.set-alert-button:disabled {
+     background-color: #bdc3c7;
+     cursor: not-allowed;
+}
+.set-alert-button:hover:not(:disabled) {
+    background-color: #2ecc71;
+}
+
+/* --- Export Section --- */
+/* Style matching Dash: style={'display': 'flex', 'justifyContent': 'center', 'margin': '20px'} */
+.export-buttons {
+  display: flex;
+  justify-content: center; /* Center buttons */
+  gap: 10px;
+  margin: 20px; /* Margin from Dash Div */
+}
+
+.export-buttons button {
+    padding: 10px; /* Padding from Dash Button */
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: white;
+    background-color: #e67e22; /* Orange from Dash Button */
+    margin: 10px; /* Margin from Dash Button */
+}
+.export-buttons button:disabled {
+     background-color: #bdc3c7;
+     cursor: not-allowed;
+}
+.export-buttons button:hover:not(:disabled) {
+    background-color: #d35400;
+}
+
+/* Error/Loading/Success Messages */
+.message {
+    text-align: center;
+    padding: 15px 20px;
+    margin: 15px auto;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.notification-section .message {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    font-size: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.notification-section .success-message {
+    background-color: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.notification-section .error-message {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+/* Style for the success message icon */
+.notification-section .success-message::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #059669;
+    color: white;
+}
+
+/* Style for the error message icon */
+.notification-section .error-message::before {
+    content: '!';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #dc2626;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .notification-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .notification-form .control-item {
+        max-width: none;
+    }
+
+    .notification-form button {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+.error-message {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.success-message {
+    background-color: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #dcfce7;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.loading-message {
+  color: #3498db;
+  font-weight: normal; /* Less prominent loading message */
+}
+
+/* Style for the success message icon */
+.success-message::before {
+    content: '✓';
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #16a34a;
+    color: white;
+}
+
+/* Style for the error message icon */
+.error-message::before {
+    content: '!';
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #dc2626;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.import-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.import-section h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.import-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.import-form input[type="file"] {
+    padding: 8px;
+    border: 2px dashed #cbd5e0;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.import-form button {
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.import-form button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.import-form button:hover:not(:disabled) {
+    background-color: #27ae60;
+}
+
+.imported-data-preview {
+    margin: 15px auto;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.imported-data-preview table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.imported-data-preview th, 
+.imported-data-preview td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.imported-data-preview th {
+    background-color: #f7fafc;
+    font-weight: bold;
+}
+
+.imported-data-controls {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.imported-data-controls .control-item {
+    margin: 10px 0;
+}
+
+.imported-data-controls input[type="text"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.imported-data-controls label {
+    display: block;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.imported-data-controls h3 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.checkbox-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.checkbox-item label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.helper-text {
+    color: #6c757d;
+    font-style: italic;
+    margin-left: 24px;
+}
+
+.visualize-button {
+    margin: 20px auto 0;
+    padding: 12px 24px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 200px;
+    max-width: 300px;
+    display: block;
+    transition: background-color 0.2s ease;
+}
+
+.visualize-button:hover {
+    background-color: #27ae60;
+}
+
+.visualize-button:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.file-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.file-type-select {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    min-width: 100px;
+}
+
+.soap-client-demo {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.soap-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.form-group input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 120px;
+    min-height: 38px;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    box-sizing: border-box;
+}
+
+.form-group input[type="date"] {
+    min-width: 180px;
+}
+
+.soap-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.soap-section button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    min-height: 38px;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.soap-section button:hover {
+    background-color: #0056b3;
+}
+
+.results {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.results ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.results li {
+    padding: 5px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.results li:last-child {
+    border-bottom: none;
+}
+
+.login-section {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-section h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-form .control-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-form label {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.login-form input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.login-form .submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 20px auto 0;
+    min-width: 120px;
+    transition: background-color 0.2s;
+}
+
+.login-form .submit-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.login-form .submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.login-hint {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+
