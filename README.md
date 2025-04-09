@@ -37,7 +37,7 @@ graph TD
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/nbp-exchange-monitor.git
+   git clone https://github.com/KaloeSan/nbp-exchange-monitor.git
    cd nbp-exchange-monitor
    ```
 
@@ -137,14 +137,10 @@ docker-compose -f docker-compose.prod.yml up --build
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
 ## Contact
 
-Project Maintainer: [Your Name] - your.email@example.com  
-Project Link: [https://github.com/yourusername/nbp-exchange-monitor](https://github.com/yourusername/nbp-exchange-monitor)
+Project Maintainer: [Kamil Kostka] - kamilkostka6@gmail.com
+Project Link: [https://github.com/KaloeSan/nbp-exchange-monitor](https://github.com/KaloeSan/nbp-exchange-monitor)
 
 ## Acknowledgments
 - National Bank of Poland for their public API
