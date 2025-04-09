@@ -1,6 +1,9 @@
 # NBP Exchange Rates Monitoring System
 
-![Dashboard Screenshot](screenshots/main.png) 
+![Main Screenshot](screenshots/main.png) 
+![Currency Exchange Screenshot](screenshots/currency_exchange.png)
+![SOAP Screenshot](screenshots/soap.png)
+![Currency Rate Alert Screenshot](screenshots/currency_rate_alert.png)
 
 ## Features
 
@@ -62,9 +65,6 @@ Access the application:
 - **Rate Dashboard**: Real-time updates via WebSocket
 - **Chart Visualization**: React-ChartJS for historical data
 - **Responsive Design**: Mobile-friendly interface
-
-![Authentication Flow](screenshots/auth.png) <!-- Add your screenshot -->
-*Example: User authentication flow*
 
 ## API Examples
 
