@@ -1,21 +1,23 @@
 # NBP Exchange Rates Monitoring System
 
-A modern web application for monitoring National Bank of Poland (NBP) exchange rates with SOAP API integration, built with FastAPI backend and React frontend.
+![Dashboard Screenshot](screenshots/main.png) 
 
 ## Features
 
 ### Core Functionality
-- **Real-time Exchange Rates**: Fetches and displays current exchange rates from NBP API
-- **Historical Data**: View historical exchange rate trends with interactive charts
-- **SOAP API Integration**: Includes a fully functional SOAP service for enterprise integration
-- **User Authentication**: Secure login and session management
-- **Notification System**: Configure alerts for specific exchange rate thresholds
+- **Real-time Exchange Rates**: Fetches current rates from NBP API every hour
+- **Historical Data Analysis**: Interactive charts with 30-day rate history
+- **Dual API Integration**:
+  - REST API for modern web clients
+  - SOAP API for enterprise system integration
+- **Secure Authentication**: JWT-based auth with password hashing
+- **Rate Alerts**: Email notifications when rates hit user-defined thresholds
 
-### Technical Highlights
-- **Microservices Architecture**: Docker containers for backend, frontend, and database
-- **Modern Stack**: FastAPI (Python) backend + React (JavaScript) frontend
-- **Production-Ready**: Nginx reverse proxy, PostgreSQL database, and proper environment configuration
-- **CI/CD Ready**: Dockerized setup makes it deployment-ready for any cloud platform
+### Technical Implementation
+- **Transaction Management**: ACID-compliant database operations
+- **Data Isolation**: Read-committed isolation level for concurrent access
+- **API Documentation**: Auto-generated Swagger/OpenAPI docs
+- **Containerized**: Docker Compose for easy deployment
 
 ## System Architecture
 
@@ -23,8 +25,9 @@ A modern web application for monitoring National Bank of Poland (NBP) exchange r
 graph TD
     A[Frontend - React] -->|REST API| B[Backend - FastAPI]
     B -->|SOAP| C[External Systems]
-    B -->|Database| D[PostgreSQL]
+    B -->|PostgreSQL| D[(Database)]
     A -->|WebSocket| B[Notifications]
+    B -->|SMTP| E[Email Service]
 ```
 
 ## Getting Started
@@ -34,115 +37,109 @@ graph TD
 - Docker Compose 2.0+
 - Node.js 16+ (for frontend development)
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/KaloeSan/nbp-exchange-monitor.git
-   cd nbp-exchange-monitor
-   ```
-
-2. Create `.env` file (see [Configuration](#configuration) section)
-
-3. Start the system:
-   ```bash
-   docker-compose up --build
-   ```
-
-4. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - SOAP Service: http://localhost:8001/soap?wsdl
-
-## Configuration
-
-Create a `.env` file in the project root with these variables (example values shown):
-
-```ini
-# Database
-POSTGRES_USER=nbp_user
-POSTGRES_PASSWORD=secure_password
-POSTGRES_DB=nbp_data
-
-# Backend
-SECRET_KEY=your-secret-key-here
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# NBP API
-NBP_API_URL=https://api.nbp.pl/api/exchangerates
-NBP_API_TIMEOUT=10
-
-# SOAP Service
-SOAP_SERVICE_HOST=0.0.0.0
-SOAP_SERVICE_PORT=8001
+### Quick Start
+```bash
+git clone https://github.com/KaloeSan/nbp-exchange-monitor.git
+cd nbp-exchange-monitor
+cp .env.example .env
+docker-compose up --build
 ```
 
-## Development
+Access the application:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000/docs
+- SOAP WSDL: http://localhost:8001/soap?wsdl
 
-### Backend Development
+## Key Technical Components
+
+### Backend Services
+- **Data Fetching**: Scheduled NBP API polling with retry logic
+- **Database Layer**: SQLAlchemy ORM with async support
+- **SOAP Service**: Zeep-based implementation with WSDL generation
+- **Authentication**: OAuth2 with JWT tokens
+
+### Frontend Features
+- **Rate Dashboard**: Real-time updates via WebSocket
+- **Chart Visualization**: React-ChartJS for historical data
+- **Responsive Design**: Mobile-friendly interface
+
+![Authentication Flow](screenshots/auth.png) <!-- Add your screenshot -->
+*Example: User authentication flow*
+
+## API Examples
+
+### REST API
+```bash
+# Get current EUR rate
+curl -X 'GET' \
+  'http://localhost:8000/api/v1/rates/EUR' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer YOUR_TOKEN'
+```
+
+### SOAP API
+```xml
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+                  xmlns:nbp="http://nbp.pl/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <nbp:GetHistoricalRates>
+         <currency>USD</currency>
+         <days>30</days>
+      </nbp:GetHistoricalRates>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+## Development Workflow
+
+### Backend
 ```bash
 cd backend
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-### Frontend Development
+### Frontend
 ```bash
 cd frontend
 npm install
 npm start
 ```
 
-## API Documentation
+## Deployment Options
 
-### REST API
-Available at http://localhost:8000/docs (Swagger UI) or http://localhost:8000/redoc
+### Production Checklist
+1. Set `NODE_ENV=production` in frontend build
+2. Configure HTTPS with valid certificates
+3. Implement database backups
+4. Set up monitoring (Prometheus/Grafana)
 
-### SOAP API
-WSDL available at http://localhost:8001/soap?wsdl
-
-Example SOAP request:
-```xml
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:nbp="http://nbp.pl/">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <nbp:GetCurrentExchangeRate>
-         <currency>EUR</currency>
-      </nbp:GetCurrentExchangeRate>
-   </soapenv:Body>
-</soapenv:Envelope>
-```
-
-## Deployment
-
-The system is ready for deployment to any Docker-supported platform. For production:
-
-1. Set `NODE_ENV=production` in frontend Dockerfile
-2. Configure proper CORS origins in backend environment
-3. Set up HTTPS with proper certificates
-4. Consider using a managed PostgreSQL service for production database
-
-Example deployment to AWS ECS:
+### Cloud Deployment
 ```bash
-docker-compose -f docker-compose.prod.yml up --build
+# Example for AWS ECS
+docker-compose -f docker-compose.prod.yml up --build -d
 ```
 
-## Contributing
+## Project Structure
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+```
+nbp-exchange-monitor/
+├── backend/              # FastAPI application
+│   ├── app/              # Main application code
+│   ├── Dockerfile        # Container configuration
+│   └── requirements.txt  # Python dependencies
+├── frontend/             # React application
+│   ├── public/           # Static assets
+│   ├── src/              # React components
+│   └── Dockerfile        # Frontend container
+└── docker-compose.yml    # Orchestration
+```
 
 ## Contact
 
-Project Maintainer: [Kamil Kostka] - kamilkostka6@gmail.com
-Project Link: [https://github.com/KaloeSan/nbp-exchange-monitor](https://github.com/KaloeSan/nbp-exchange-monitor)
-
-## Acknowledgments
-- National Bank of Poland for their public API
-- FastAPI and React communities for excellent documentation
-- Docker for containerization technology
+For questions or support, please contact:  
+Kamil Kostka - kamilkostka6@gmail.com  
+Project Repository: [github.com/KaloeSan/nbp-exchange-monitor](https://github.com/KaloeSan/nbp-exchange-monitor)
