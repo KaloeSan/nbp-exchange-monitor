@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json (or yarn.lock)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies including Firebase CLI
+RUN npm install && npm install -g firebase-tools
 
 # Copy the rest of the application code
 COPY . .

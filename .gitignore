@@ -126,3 +126,11 @@ docs/_templates/
 /test-reports/
 /cypress/screenshots/
 /cypress/videos/
+
+# Firebase
+.firebase/
+.firebaserc
+firebase.json
+firebase-debug.log
+firebase-debug.*.log
+frontend/src/firebase.js
