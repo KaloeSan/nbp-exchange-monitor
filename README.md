@@ -4,7 +4,7 @@
 ![Currency Exchange Screenshot](screenshots/currency_exchange.png)
 ![SOAP Screenshot](screenshots/soap.png)
 ![Currency Rate Alert Screenshot](screenshots/currency_rate_alert.png)
-![LoginScreenshot](screenshots/login.png)
+![Login Screenshot](screenshots/login.png)
 
 ## Features
 
